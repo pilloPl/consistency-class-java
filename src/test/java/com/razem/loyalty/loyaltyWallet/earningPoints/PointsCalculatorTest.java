@@ -73,9 +73,9 @@ class PointsCalculatorTest {
         @Test
         void appliesEveningMultiplierBetween18And22() {
             PointsCalculator.PurchaseInformation evening = purchase(Money.of(1000), Tier.STANDARD, Channel.IN_STORE,
-                    Instant.parse("2026-06-23T17:00:00Z"), List.of(), List.of());  // 19:00 CEST = 17:00 UTC
+                    Instant.parse("2026-06-23T19:00:00Z"), List.of(), List.of());  // 19:00 UTC = evening
             PointsCalculator.PurchaseInformation daytime = purchase(Money.of(1000), Tier.STANDARD, Channel.IN_STORE,
-                    Instant.parse("2026-06-23T10:00:00Z"), List.of(), List.of());  // 12:00 CEST = 10:00 UTC
+                    Instant.parse("2026-06-23T12:00:00Z"), List.of(), List.of());  // 12:00 UTC = daytime
 
             assertThat(PointsCalculator.buyerPoints(evening).value()).isEqualTo(150);
             assertThat(PointsCalculator.buyerPoints(daytime).value()).isEqualTo(100);

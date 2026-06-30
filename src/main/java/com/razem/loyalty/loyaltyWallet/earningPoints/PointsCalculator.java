@@ -3,7 +3,6 @@ package com.razem.loyalty.loyaltyWallet.earningPoints;
 import com.razem.loyalty.loyaltyWallet.LoyaltyPoints;
 import com.razem.loyalty.membership.Tier;
 
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +65,7 @@ public class PointsCalculator {
     }
 
     private static boolean isEvening(java.time.Instant at) {
-        int hour = at.atZone(ZoneId.systemDefault()).getHour();
+        int hour = at.atZone(java.time.ZoneOffset.UTC).getHour();
         return hour >= 18 && hour < 22;
     }
 
