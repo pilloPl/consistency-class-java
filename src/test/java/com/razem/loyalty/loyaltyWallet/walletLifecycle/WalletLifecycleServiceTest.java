@@ -21,12 +21,6 @@ class WalletLifecycleServiceTest {
     private final DeactivateWalletService deactivateService = new DeactivateWalletService(repository);
     private final CloseWalletService closeService = new CloseWalletService(repository);
 
-    private WalletNumber openedWallet() {
-        WalletNumber walletNumber = WalletNumber.random();
-        openService.open(new OpenLoyaltyWallet(walletNumber, MemberId.random(), RedemptionCadence.WEEKLY, RedemptionLimit.of(5)));
-        return walletNumber;
-    }
-
     @Test
     void deactivatesWalletAndPersistsEvent() {
         WalletNumber walletNumber = openedWallet();
@@ -72,5 +66,11 @@ class WalletLifecycleServiceTest {
         assertThatThrownBy(() -> closeService.close(walletNumber))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Wallet doesn't exist");
+    }
+
+    private WalletNumber openedWallet() {
+        WalletNumber walletNumber = WalletNumber.random();
+        openService.open(new OpenLoyaltyWallet(walletNumber, MemberId.random(), RedemptionCadence.WEEKLY, RedemptionLimit.of(5)));
+        return walletNumber;
     }
 }

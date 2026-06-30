@@ -20,20 +20,6 @@ class AllCommandsProduceEventsTest {
     private final MemberId familyMember = MemberId.random();
     private final Instant at = Instant.parse("2026-06-23T12:00:00Z");
 
-    private LoyaltyWallet.Active openWallet() {
-        return (LoyaltyWallet.Active) LoyaltyWalletDecider.openLoyaltyWallet(
-                new OpenLoyaltyWallet(walletNumber, owner, RedemptionCadence.WEEKLY, RedemptionLimit.of(5)),
-                LoyaltyWallet.initial()
-        ).state();
-    }
-
-    private LoyaltyWallet.Active walletWithPoints(int points) {
-        return (LoyaltyWallet.Active) LoyaltyWalletDecider.earnLoyaltyPoints(
-                new EarnLoyaltyPoints(walletNumber, LoyaltyPoints.of(points), at),
-                openWallet()
-        ).state();
-    }
-
     @Test
     void openLoyaltyWalletProducesLoyaltyWalletOpenedEvent() {
         DecideResult<LoyaltyWallet, LoyaltyWalletEvent> result = LoyaltyWalletDecider.openLoyaltyWallet(
@@ -113,6 +99,7 @@ class AllCommandsProduceEventsTest {
         );
 
         assertThat(result.events()).hasSize(1);
+        assertThat(result.events()).hasSize(1);
         assertThat(result.events().get(0)).isInstanceOf(RedemptionWindowReset.class);
     }
 
@@ -170,5 +157,19 @@ class AllCommandsProduceEventsTest {
                 new CloseWallet(walletNumber), closed);
 
         assertThat(result.events()).isEmpty();
+    }
+
+    private LoyaltyWallet.Active openWallet() {
+        return (LoyaltyWallet.Active) LoyaltyWalletDecider.openLoyaltyWallet(
+                new OpenLoyaltyWallet(walletNumber, owner, RedemptionCadence.WEEKLY, RedemptionLimit.of(5)),
+                LoyaltyWallet.initial()
+        ).state();
+    }
+
+    private LoyaltyWallet.Active walletWithPoints(int points) {
+        return (LoyaltyWallet.Active) LoyaltyWalletDecider.earnLoyaltyPoints(
+                new EarnLoyaltyPoints(walletNumber, LoyaltyPoints.of(points), at),
+                openWallet()
+        ).state();
     }
 }
