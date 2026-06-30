@@ -47,6 +47,18 @@ class RedeemingPointsTest {
     }
 
     @Test
+    void cannotRedeemWhenRedemptionWindowExhausted() {
+        LoyaltyWallet wallet = LoyaltyWallet.notExisting();
+        wallet.open(walletNumber, owner, RedemptionCadence.WEEKLY, RedemptionLimit.of(1));
+        wallet.earnPoints(LoyaltyPoints.of(100), at);
+        wallet.redeemPoints(owner, LoyaltyPoints.of(10), at);
+
+        assertThatThrownBy(() ->
+                wallet.redeemPoints(owner, LoyaltyPoints.of(10), at)
+        ).isInstanceOf(IllegalStateException.class).hasMessage("Redemption window exhausted");
+    }
+
+    @Test
     void cannotRedeemMoreThanAvailable() {
         assertThatThrownBy(() ->
                 walletWithPoints(20).redeemPoints(owner, LoyaltyPoints.of(50), at)
