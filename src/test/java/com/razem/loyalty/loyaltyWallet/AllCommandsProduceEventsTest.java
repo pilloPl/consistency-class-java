@@ -20,18 +20,6 @@ class AllCommandsProduceEventsTest {
     private final MemberId familyMember = MemberId.random();
     private final Instant at = Instant.parse("2026-06-23T12:00:00Z");
 
-    private LoyaltyWallet openWallet() {
-        LoyaltyWallet wallet = LoyaltyWallet.notExisting();
-        wallet.open(walletNumber, owner, RedemptionCadence.WEEKLY, RedemptionLimit.of(5));
-        return wallet;
-    }
-
-    private LoyaltyWallet walletWithPoints(int points) {
-        LoyaltyWallet wallet = openWallet();
-        wallet.earnPoints(LoyaltyPoints.of(points), at);
-        return wallet;
-    }
-
     @Test
     void openLoyaltyWalletProducesLoyaltyWalletOpenedEvent() {
         LoyaltyWallet wallet = LoyaltyWallet.notExisting();
@@ -140,5 +128,17 @@ class AllCommandsProduceEventsTest {
         List<LoyaltyWalletEvent> events = wallet.close();
 
         assertThat(events).isEmpty();
+    }
+
+    private LoyaltyWallet openWallet() {
+        LoyaltyWallet wallet = LoyaltyWallet.notExisting();
+        wallet.open(walletNumber, owner, RedemptionCadence.WEEKLY, RedemptionLimit.of(5));
+        return wallet;
+    }
+
+    private LoyaltyWallet walletWithPoints(int points) {
+        LoyaltyWallet wallet = openWallet();
+        wallet.earnPoints(LoyaltyPoints.of(points), at);
+        return wallet;
     }
 }
