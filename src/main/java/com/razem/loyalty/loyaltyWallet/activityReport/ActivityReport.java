@@ -39,7 +39,13 @@ public record ActivityReport(
                         true,
                         List.copyOf(newEntries)
                 );
-                yield new ActivityReport(document.id(), document.walletNumber(), document.ownerId(), newWindow, document.closedWindows());
+                yield new ActivityReport(
+                        document.id(),
+                        document.walletNumber(),
+                        document.ownerId(),
+                        newWindow,
+                        document.closedWindows()
+                );
             }
             case LoyaltyWalletEvent.LoyaltyPointsRedeemed redeemed -> {
                 if (document == null) yield null;
@@ -56,14 +62,26 @@ public record ActivityReport(
                         true,
                         List.copyOf(newEntries)
                 );
-                yield new ActivityReport(document.id(), document.walletNumber(), document.ownerId(), newWindow, document.closedWindows());
+                yield new ActivityReport(
+                        document.id(),
+                        document.walletNumber(),
+                        document.ownerId(),
+                        newWindow,
+                        document.closedWindows()
+                );
             }
             case LoyaltyWalletEvent.RedemptionWindowReset reset -> {
                 if (document == null) yield null;
                 List<WindowActivity> newClosedWindows = new ArrayList<>(document.closedWindows());
                 newClosedWindows.add(document.currentWindow());
                 WindowActivity newWindow = WindowActivity.empty(document.currentWindow().windowNumber() + 1);
-                yield new ActivityReport(document.id(), document.walletNumber(), document.ownerId(), newWindow, List.copyOf(newClosedWindows));
+                yield new ActivityReport(
+                        document.id(),
+                        document.walletNumber(),
+                        document.ownerId(),
+                        newWindow,
+                        List.copyOf(newClosedWindows)
+                );
             }
             default -> document;
         };

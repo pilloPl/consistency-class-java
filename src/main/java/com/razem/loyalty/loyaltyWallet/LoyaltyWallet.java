@@ -32,7 +32,12 @@ public sealed interface LoyaltyWallet permits
         return new NotExisting();
     }
 
-    static Active open(WalletNumber walletNumber, MemberId ownerId, RedemptionCadence cadence, RedemptionLimit maxRedemptionCount) {
+    static Active open(
+            WalletNumber walletNumber,
+            MemberId ownerId,
+            RedemptionCadence cadence,
+            RedemptionLimit maxRedemptionCount
+    ) {
         return new Active(
                 walletNumber,
                 ownerId,
@@ -42,9 +47,17 @@ public sealed interface LoyaltyWallet permits
         );
     }
 
-    static Active open(WalletNumber walletNumber, MemberId ownerId, RedemptionCadence cadence, RedemptionLimit maxRedemptionCount,
-                       LoyaltyPoints earnedPoints, LoyaltyPoints redeemedPoints) {
-        LoyaltyPointsLimit pointsLimit = LoyaltyPointsLimit.of(earnedPoints, redeemedPoints, RedemptionLimit.ZERO, maxRedemptionCount);
+    static Active open(
+            WalletNumber walletNumber,
+            MemberId ownerId,
+            RedemptionCadence cadence,
+            RedemptionLimit maxRedemptionCount,
+            LoyaltyPoints earnedPoints,
+            LoyaltyPoints redeemedPoints
+    ) {
+        LoyaltyPointsLimit pointsLimit = LoyaltyPointsLimit.of(
+                earnedPoints, redeemedPoints, RedemptionLimit.ZERO, maxRedemptionCount
+        );
         return new Active(
                 walletNumber,
                 ownerId,

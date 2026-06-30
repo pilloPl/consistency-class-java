@@ -19,7 +19,8 @@ public record MonthlySummary(
         int redemptionCount,
         int windowsClosed
 ) {
-    private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM").withZone(ZoneOffset.UTC);
+    private static final DateTimeFormatter MONTH_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM").withZone(ZoneOffset.UTC);
 
     public static String monthOf(Instant at) {
         return MONTH_FORMATTER.format(at);
@@ -40,10 +41,15 @@ public record MonthlySummary(
                         0, 0, 0, 0, 0
                 );
                 yield new MonthlySummary(
-                        summary.id(), summary.walletNumber(), summary.ownerId(), summary.month(),
+                        summary.id(),
+                        summary.walletNumber(),
+                        summary.ownerId(),
+                        summary.month(),
                         summary.totalEarned() + earned.points().value(),
-                        summary.totalRedeemed(), summary.totalBurned(),
-                        summary.redemptionCount(), summary.windowsClosed()
+                        summary.totalRedeemed(),
+                        summary.totalBurned(),
+                        summary.redemptionCount(),
+                        summary.windowsClosed()
                 );
             }
             case LoyaltyWalletEvent.LoyaltyPointsRedeemed redeemed -> {
@@ -56,7 +62,10 @@ public record MonthlySummary(
                 );
                 int burned = redeemed.burned().value();
                 yield new MonthlySummary(
-                        summary.id(), summary.walletNumber(), summary.ownerId(), summary.month(),
+                        summary.id(),
+                        summary.walletNumber(),
+                        summary.ownerId(),
+                        summary.month(),
                         summary.totalEarned(),
                         summary.totalRedeemed() + redeemed.points().value(),
                         summary.totalBurned() + burned,
@@ -73,9 +82,15 @@ public record MonthlySummary(
                         0, 0, 0, 0, 0
                 );
                 yield new MonthlySummary(
-                        summary.id(), summary.walletNumber(), summary.ownerId(), summary.month(),
-                        summary.totalEarned(), summary.totalRedeemed(), summary.totalBurned(),
-                        summary.redemptionCount(), summary.windowsClosed() + 1
+                        summary.id(),
+                        summary.walletNumber(),
+                        summary.ownerId(),
+                        summary.month(),
+                        summary.totalEarned(),
+                        summary.totalRedeemed(),
+                        summary.totalBurned(),
+                        summary.redemptionCount(),
+                        summary.windowsClosed() + 1
                 );
             }
             default -> document;

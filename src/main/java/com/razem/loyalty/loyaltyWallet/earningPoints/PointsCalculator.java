@@ -1,8 +1,11 @@
 package com.razem.loyalty.loyaltyWallet.earningPoints;
 
 import com.razem.loyalty.loyaltyWallet.LoyaltyPoints;
+import com.razem.loyalty.loyaltyWallet.access.MemberId;
 import com.razem.loyalty.membership.Tier;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +16,9 @@ public class PointsCalculator {
 
     public record PurchaseInformation(
             Money purchaseValue,
-            com.razem.loyalty.loyaltyWallet.access.MemberId buyer,
+            MemberId buyer,
             Channel channel,
-            java.time.Instant at,
+            Instant at,
             List<LoyaltyPoints> promotionBonuses,
             List<Beneficiary> beneficiaries,
             Tier tier
@@ -64,8 +67,8 @@ public class PointsCalculator {
         };
     }
 
-    private static boolean isEvening(java.time.Instant at) {
-        int hour = at.atZone(java.time.ZoneOffset.UTC).getHour();
+    private static boolean isEvening(Instant at) {
+        int hour = at.atZone(ZoneOffset.UTC).getHour();
         return hour >= 18 && hour < 22;
     }
 
@@ -91,7 +94,11 @@ public class PointsCalculator {
 
         for (Beneficiary beneficiary : purchase.beneficiaries()) {
             int amount = (int) Math.round(base.value() * shareOfBuyer(beneficiary.role()));
-            components.add(new PointComponent(beneficiary.member(), beneficiary.role().name(), LoyaltyPoints.of(amount)));
+            components.add(new PointComponent(
+                    beneficiary.member(),
+                    beneficiary.role().name(),
+                    LoyaltyPoints.of(amount)
+            ));
         }
 
         return new ComponentBreakdown(components);

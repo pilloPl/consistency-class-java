@@ -23,7 +23,12 @@ public sealed interface LoyaltyWalletCommand permits
             LoyaltyPoints earnedPoints,
             LoyaltyPoints redeemedPoints
     ) implements LoyaltyWalletCommand {
-        public OpenLoyaltyWallet(WalletNumber walletNumber, MemberId ownerId, RedemptionCadence cadence, RedemptionLimit maxRedemptionCount) {
+        public OpenLoyaltyWallet(
+                WalletNumber walletNumber,
+                MemberId ownerId,
+                RedemptionCadence cadence,
+                RedemptionLimit maxRedemptionCount
+        ) {
             this(walletNumber, ownerId, cadence, maxRedemptionCount, LoyaltyPoints.ZERO, LoyaltyPoints.ZERO);
         }
     }
@@ -41,7 +46,12 @@ public sealed interface LoyaltyWalletCommand permits
             LoyaltyPoints burned,
             Instant at
     ) implements LoyaltyWalletCommand {
-        public RedeemLoyaltyPoints(WalletNumber walletNumber, MemberId memberId, LoyaltyPoints points, Instant at) {
+        public RedeemLoyaltyPoints(
+                WalletNumber walletNumber,
+                MemberId memberId,
+                LoyaltyPoints points,
+                Instant at
+        ) {
             this(walletNumber, memberId, points, points, at);
         }
     }
