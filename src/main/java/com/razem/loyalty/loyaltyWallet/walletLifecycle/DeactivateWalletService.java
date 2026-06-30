@@ -1,12 +1,11 @@
 package com.razem.loyalty.loyaltyWallet.walletLifecycle;
 
-import com.razem.loyalty.loyaltyWallet.DecideResult;
 import com.razem.loyalty.loyaltyWallet.LoyaltyWallet;
-import com.razem.loyalty.loyaltyWallet.LoyaltyWalletCommand.DeactivateWallet;
-import com.razem.loyalty.loyaltyWallet.LoyaltyWalletDecider;
 import com.razem.loyalty.loyaltyWallet.LoyaltyWalletEvent;
 import com.razem.loyalty.loyaltyWallet.LoyaltyWalletRepository;
 import com.razem.loyalty.loyaltyWallet.WalletNumber;
+
+import java.util.List;
 
 public class DeactivateWalletService {
 
@@ -17,13 +16,12 @@ public class DeactivateWalletService {
     }
 
     public LoyaltyWallet deactivate(WalletNumber walletNumber) {
-        LoyaltyWallet current = repository.findByWalletNumber(walletNumber)
-                .orElse(LoyaltyWallet.initial());
+        LoyaltyWallet wallet = repository.findByWalletNumber(walletNumber)
+                .orElse(LoyaltyWallet.notExisting());
 
-        DecideResult<LoyaltyWallet, LoyaltyWalletEvent> result = LoyaltyWalletDecider.deactivateWallet(
-                new DeactivateWallet(walletNumber), current);
+        List<LoyaltyWalletEvent> events = wallet.deactivate();
 
-        repository.save(walletNumber, result.state(), result.events());
-        return result.state();
+        repository.save(walletNumber, wallet, events);
+        return wallet;
     }
 }

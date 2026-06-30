@@ -2,7 +2,6 @@ package com.razem.loyalty.loyaltyWallet.walletLifecycle;
 
 import com.razem.loyalty.loyaltyWallet.InMemoryLoyaltyWalletRepository;
 import com.razem.loyalty.loyaltyWallet.LoyaltyWallet;
-import com.razem.loyalty.loyaltyWallet.LoyaltyWalletCommand.OpenLoyaltyWallet;
 import com.razem.loyalty.loyaltyWallet.LoyaltyWalletEvent.WalletClosed;
 import com.razem.loyalty.loyaltyWallet.LoyaltyWalletEvent.WalletDeactivated;
 import com.razem.loyalty.loyaltyWallet.RedemptionCadence;
@@ -23,7 +22,7 @@ class WalletLifecycleServiceTest {
 
     private WalletNumber openedWallet() {
         WalletNumber walletNumber = WalletNumber.random();
-        openService.open(new OpenLoyaltyWallet(walletNumber, MemberId.random(), RedemptionCadence.WEEKLY, RedemptionLimit.of(5)));
+        openService.open(walletNumber, MemberId.random(), RedemptionCadence.WEEKLY, RedemptionLimit.of(5));
         return walletNumber;
     }
 
@@ -33,9 +32,9 @@ class WalletLifecycleServiceTest {
 
         LoyaltyWallet result = deactivateService.deactivate(walletNumber);
 
-        assertThat(result).isInstanceOf(LoyaltyWallet.Deactivated.class);
+        assertThat(result.isDeactivated()).isTrue();
         LoyaltyWallet persisted = repository.findByWalletNumber(walletNumber).orElseThrow();
-        assertThat(persisted).isInstanceOf(LoyaltyWallet.Deactivated.class);
+        assertThat(persisted.isDeactivated()).isTrue();
         long deactivatedEvents = repository.getEvents(walletNumber).stream()
                 .filter(e -> e instanceof WalletDeactivated).count();
         assertThat(deactivatedEvents).isEqualTo(1);
@@ -47,9 +46,9 @@ class WalletLifecycleServiceTest {
 
         LoyaltyWallet result = closeService.close(walletNumber);
 
-        assertThat(result).isInstanceOf(LoyaltyWallet.Closed.class);
+        assertThat(result.isClosed()).isTrue();
         LoyaltyWallet persisted = repository.findByWalletNumber(walletNumber).orElseThrow();
-        assertThat(persisted).isInstanceOf(LoyaltyWallet.Closed.class);
+        assertThat(persisted.isClosed()).isTrue();
         long closedEvents = repository.getEvents(walletNumber).stream()
                 .filter(e -> e instanceof WalletClosed).count();
         assertThat(closedEvents).isEqualTo(1);
@@ -62,7 +61,7 @@ class WalletLifecycleServiceTest {
         deactivateService.deactivate(walletNumber);
         LoyaltyWallet result = closeService.close(walletNumber);
 
-        assertThat(result).isInstanceOf(LoyaltyWallet.Closed.class);
+        assertThat(result.isClosed()).isTrue();
     }
 
     @Test
