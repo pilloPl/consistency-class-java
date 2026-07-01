@@ -73,6 +73,17 @@ class RedeemingPointsTest {
     }
 
     @Test
+    void accessCheckIsNotDoneByWallet() {
+        LoyaltyWallet wallet = walletWithPoints(100);
+        MemberId stranger = MemberId.random();
+
+        // wallet no longer checks access - it trusts the service layer
+        assertThatCode(() ->
+                wallet.redeemPoints(stranger, LoyaltyPoints.of(10), at)
+        ).doesNotThrowAnyException();
+    }
+
+    @Test
     void cannotRedeemOnDeactivatedWallet() {
         assertThatThrownBy(() ->
                 deactivated().redeemPoints(owner, LoyaltyPoints.of(40), at)

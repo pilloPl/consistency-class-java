@@ -14,7 +14,6 @@ public class LoyaltyWallet {
     private MemberId ownerId;
     private LoyaltyPointsLimit pointsLimit;
     private RedemptionCadence cadence;
-    private WalletAccess access;
     private Status status = Status.NOT_EXISTING;
 
     public static LoyaltyWallet notExisting() {
@@ -47,7 +46,6 @@ public class LoyaltyWallet {
                 earnedPoints, redeemedPoints, RedemptionLimit.ZERO, maxRedemptionCount
         );
         this.cadence = cadence;
-        this.access = WalletAccess.of(ownerId);
         this.status = Status.ACTIVE;
         return List.of(new LoyaltyWalletOpened(this.walletNumber, this.ownerId));
     }
@@ -65,9 +63,6 @@ public class LoyaltyWallet {
             Instant at
     ) {
         assertActive();
-        if (!access.hasAccess(memberId)) {
-            throw new IllegalStateException("Not authorized to redeem");
-        }
         if (pointsLimit.redemptionsLeft() <= 0) {
             throw new IllegalStateException("Redemption window exhausted");
         }
@@ -86,18 +81,6 @@ public class LoyaltyWallet {
         assertActive();
         this.cadence = cadence;
         return List.of(new RedemptionCadenceSet(walletNumber, ownerId, cadence));
-    }
-
-    public List<LoyaltyWalletEvent> grantAccess(MemberId memberId) {
-        assertActive();
-        this.access = this.access.grant(memberId);
-        return List.of(new WalletAccessGranted(walletNumber, ownerId, memberId));
-    }
-
-    public List<LoyaltyWalletEvent> revokeAccess(MemberId memberId) {
-        assertActive();
-        this.access = this.access.revoke(memberId);
-        return List.of(new WalletAccessRevoked(walletNumber, ownerId, memberId));
     }
 
     public List<LoyaltyWalletEvent> resetRedemptionWindow(Instant at) {
@@ -140,10 +123,6 @@ public class LoyaltyWallet {
 
     public RedemptionCadence cadence() {
         return cadence;
-    }
-
-    public WalletAccess access() {
-        return access;
     }
 
     public boolean isActive() {

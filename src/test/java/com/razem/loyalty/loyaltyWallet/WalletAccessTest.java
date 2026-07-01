@@ -17,96 +17,73 @@ class WalletAccessTest {
     private final Instant at = Instant.parse("2026-06-23T12:00:00Z");
 
     @Test
-    void ownerCanRedeemFromBalance() {
-        LoyaltyWallet wallet = walletWithPoints(100);
-        wallet.redeemPoints(owner, LoyaltyPoints.of(40), at);
-        assertThat(wallet.pointsLimit().availablePoints().value()).isEqualTo(60);
+    void initializesAccessForOwnerAndEmitsEvent() {
+        WalletAccess access = WalletAccess.notExisting();
+
+        List<LoyaltyWalletEvent> events = access.initialize(walletNumber, owner);
+
+        assertThat(access.hasAccess(owner)).isTrue();
+        assertThat(events).hasSize(1);
+        assertThat(events.get(0)).isEqualTo(new WalletAccessGranted(walletNumber, owner, owner));
     }
 
     @Test
     void grantsAccessToFamilyMemberAndEmitsEvent() {
-        LoyaltyWallet wallet = openWallet();
+        WalletAccess access = initializedAccess();
 
-        List<LoyaltyWalletEvent> events = wallet.grantAccess(familyMember);
+        List<LoyaltyWalletEvent> events = access.grant(familyMember);
 
-        assertThat(wallet.access().hasAccess(familyMember)).isTrue();
+        assertThat(access.hasAccess(familyMember)).isTrue();
         assertThat(events).hasSize(1);
-        assertThat(events.get(0)).isEqualTo(
-                new WalletAccessGranted(walletNumber, owner, familyMember)
-        );
+        assertThat(events.get(0)).isEqualTo(new WalletAccessGranted(walletNumber, owner, familyMember));
     }
 
     @Test
     void revokesAccessFromFamilyMemberAndEmitsEvent() {
-        LoyaltyWallet wallet = openWallet();
-        wallet.grantAccess(familyMember);
+        WalletAccess access = initializedAccess();
+        access.grant(familyMember);
 
-        List<LoyaltyWalletEvent> events = wallet.revokeAccess(familyMember);
+        List<LoyaltyWalletEvent> events = access.revoke(familyMember);
 
-        assertThat(wallet.access().hasAccess(familyMember)).isFalse();
+        assertThat(access.hasAccess(familyMember)).isFalse();
         assertThat(events).hasSize(1);
-        assertThat(events.get(0)).isEqualTo(
-                new WalletAccessRevoked(walletNumber, owner, familyMember)
-        );
+        assertThat(events.get(0)).isEqualTo(new WalletAccessRevoked(walletNumber, owner, familyMember));
     }
 
     @Test
-    void grantedFamilyMemberCanRedeemFromBalance() {
-        LoyaltyWallet wallet = walletWithPoints(100);
-        wallet.grantAccess(familyMember);
+    void ownerAlwaysHasAccess() {
+        WalletAccess access = initializedAccess();
 
-        wallet.redeemPoints(familyMember, LoyaltyPoints.of(40), at);
-
-        assertThat(wallet.pointsLimit().availablePoints().value()).isEqualTo(60);
+        assertThat(access.hasAccess(owner)).isTrue();
     }
 
     @Test
-    void cannotRedeemWithoutAccess() {
-        assertThatThrownBy(() ->
-                walletWithPoints(100).redeemPoints(familyMember, LoyaltyPoints.of(40), at)
-        ).isInstanceOf(IllegalStateException.class).hasMessage("Not authorized to redeem");
+    void memberWithoutGrantHasNoAccess() {
+        WalletAccess access = initializedAccess();
+
+        assertThat(access.hasAccess(familyMember)).isFalse();
     }
 
     @Test
-    void cannotRedeemAfterAccessRevoked() {
-        LoyaltyWallet wallet = walletWithPoints(100);
-        wallet.grantAccess(familyMember);
-        wallet.revokeAccess(familyMember);
+    void grantedMemberHasAccessAfterGrant() {
+        WalletAccess access = initializedAccess();
+        access.grant(familyMember);
 
-        assertThatThrownBy(() ->
-                wallet.redeemPoints(familyMember, LoyaltyPoints.of(40), at)
-        ).isInstanceOf(IllegalStateException.class).hasMessage("Not authorized to redeem");
+        assertThat(access.hasAccess(familyMember)).isTrue();
     }
 
     @Test
-    void cannotGrantAccessIfWalletNotActive() {
-        assertThatThrownBy(() ->
-                deactivated().grantAccess(familyMember)
-        ).isInstanceOf(IllegalStateException.class).hasMessage("Wallet is not active");
+    void revokedMemberHasNoAccessAfterRevoke() {
+        WalletAccess access = initializedAccess();
+        access.grant(familyMember);
+        access.revoke(familyMember);
+
+        assertThat(access.hasAccess(familyMember)).isFalse();
     }
 
-    @Test
-    void cannotRevokeAccessIfWalletNotActive() {
-        assertThatThrownBy(() ->
-                deactivated().revokeAccess(familyMember)
-        ).isInstanceOf(IllegalStateException.class).hasMessage("Wallet is not active");
-    }
-
-    private LoyaltyWallet openWallet() {
-        LoyaltyWallet wallet = LoyaltyWallet.notExisting();
-        wallet.open(walletNumber, owner, RedemptionCadence.WEEKLY, RedemptionLimit.of(5));
-        return wallet;
-    }
-
-    private LoyaltyWallet walletWithPoints(int points) {
-        LoyaltyWallet wallet = openWallet();
-        wallet.earnPoints(LoyaltyPoints.of(points), at);
-        return wallet;
-    }
-
-    private LoyaltyWallet deactivated() {
-        LoyaltyWallet wallet = openWallet();
-        wallet.deactivate();
-        return wallet;
+    private WalletAccess initializedAccess() {
+        WalletAccess access = WalletAccess.notExisting();
+        access.initialize(walletNumber, owner);
+        return access;
     }
 }
