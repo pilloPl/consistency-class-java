@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Granice spójności</title>
+<meta name="description" content="Szkolenie „Granice spójności i współbieżności”: mapa myśli, skille, zadania i rozwiązania.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z" fill="#050038"/><path d="M14 14h6v6h-6z" fill="#050038" opacity=".35"/></svg>
+    </span>
+    <span class="brand-name">Granice spójności</span>
+  </a>
+  <nav class="topnav">
+    <a href="#mapa">Mapa myśli</a>
+    <a href="#skille" data-open="skille">Skille</a>
+    <a href="#zadania" data-open="zadania">Zadania</a>
+    <div class="gh-menu">
+      <button class="gh" type="button" aria-haspopup="true" aria-expanded="false">GitHub <span aria-hidden="true">▾</span></button>
+      <div class="gh-pop" role="menu">
+        <a role="menuitem" href="https://github.com/pilloPl/consistency-class-java" target="_blank" rel="noopener"><span class="lang">Java</span> consistency-class-java</a>
+        <a role="menuitem" href="https://github.com/oskardudycz/consistency-class-csharp" target="_blank" rel="noopener"><span class="lang">C#</span> consistency-class-csharp</a>
+        <a role="menuitem" href="https://github.com/oskardudycz/consistency-class-ts" target="_blank" rel="noopener"><span class="lang">TS</span> consistency-class-ts</a>
+        <a role="menuitem" href="https://github.com/pilloPl/granice-spojnosci-skille" target="_blank" rel="noopener"><span class="lang">skille</span> granice-spojnosci-skille</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <h1>Granice spójności<br><span class="hl">i współbieżności</span></h1>
+  </section>
+
+  <!-- ============ MAPA MYŚLI ============ -->
+  <section id="mapa" class="board">
+    <div class="board-head">
+      <h2>Mapa myśli</h2>
+      <div class="board-tools">
+        <button class="tool" id="mm-fit" type="button">Dopasuj</button>
+        <button class="tool" id="mm-toggle" type="button">Zwiń gałęzie</button>
+      </div>
+    </div>
+    <div class="mm-wrap">
+      <svg id="mindmap" aria-label="Mapa myśli: rodzaje reguł w wymaganiach"></svg>
+    </div>
+  </section>
+
+  <!-- ============ DWA PRZYCISKI ============ -->
+  <section class="launch">
+    <div class="launch-card">
+      <button class="launch-btn" type="button" data-open="skille" aria-controls="skille">
+        <span class="sticky s-blue" aria-hidden="true">3</span>
+        <span class="launch-text">
+          <strong>Skille</strong>
+          <span>problem-classifier · context-distiller · aggregate-designer</span>
+        </span>
+        <span class="chev" aria-hidden="true">→</span>
+      </button>
+      <a class="launch-link" href="https://github.com/pilloPl/granice-spojnosci-skille" target="_blank" rel="noopener">github.com/pilloPl/granice-spojnosci-skille ↗</a>
+    </div>
+    <div class="launch-card">
+      <button class="launch-btn" type="button" data-open="zadania" aria-controls="zadania">
+        <span class="sticky s-yellow" aria-hidden="true">3</span>
+        <span class="launch-text">
+          <strong>Zadania</strong>
+          <span>reguły bez kodu · heurystyki dla modelu · model w kodzie</span>
+        </span>
+        <span class="chev" aria-hidden="true">→</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ SKILLE ============ -->
+  <section id="skille" class="panel" hidden>
+    <div class="panel-head">
+      <h2>Skille</h2>
+      <pre class="install"><code>git clone https://github.com/pilloPl/granice-spojnosci-skille.git
+cp -R granice-spojnosci-skille/{problem-classifier,context-distiller,aggregate-designer} ~/.claude/skills/</code></pre>
+    </div>
+
+    <div class="skills">
+
+      <article class="skill">
+        <header>
+          <span class="tag t-blue">klasyfikacja</span>
+          <h3>problem-classifier</h3>
+          <p>Przypisuje operację do jednej z czterech klas problemu modelarskiego.</p>
+          <code class="call">/problem-classifier &lt;wymagania | makieta | kod&gt;</code>
+        </header>
+        <details>
+          <summary>Anatomia</summary>
+          <dl class="anatomy">
+            <dt>Wejście</dt>
+            <dd>Wymagania biznesowe, makieta ekranu albo kod (klasa, endpoint, pakiet).</dd>
+            <dt>Klasy</dt>
+            <dd><b>CRUD</b> („notatnik”), <b>transformacja i prezentacja</b>, <b>integracja</b>, <b>rywalizacja o zasób</b>. Każda ma swoje sygnały w tekście i swój sposób implementacji.</dd>
+            <dt>Kroki</dt>
+            <dd><ol class="steps">
+              <li>Pozyskanie wejścia</li>
+              <li>Cichy skan sygnałów</li>
+              <li>Pytania doprecyzowujące (na kodzie odpowiada sobie sam)</li>
+              <li>Klasyfikacja, także złożona: rdzeń i to, co go obudowuje</li>
+              <li>Wynik</li>
+            </ol></dd>
+            <dt>Wynik</dt>
+            <dd>Ścieżka dedukcji, uzasadnienie, czego nie robić, podejście, pytania otwarte, podział na komponenty i diagram ich zależności.</dd>
+            <dt>Na zapleczu</dt>
+            <dd>Ściągawka klas i katalog pułapek. Na kodzie opisuje, jak system działa dziś.</dd>
+          </dl>
+        </details>
+        <a class="gh-link" href="https://github.com/pilloPl/granice-spojnosci-skille/blob/main/problem-classifier/SKILL.md" target="_blank" rel="noopener">SKILL.md ↗</a>
+      </article>
+
+      <article class="skill">
+        <header>
+          <span class="tag t-yellow">uogólnienie</span>
+          <h3>context-distiller</h3>
+          <p>Sprawdza, które pojęcia da się uogólnić w jednym kontekście i gdzie uogólnienie się kończy.</p>
+          <code class="call">/context-distiller &lt;pojęcia do sprawdzenia&gt;</code>
+        </header>
+        <details>
+          <summary>Anatomia</summary>
+          <dl class="anatomy">
+            <dt>Wejście</dt>
+            <dd>Opis domeny, wynik event stormingu albo lista pojęć. Działa też jako sonda jednego pojęcia: „czy to jest to samo?”.</dd>
+            <dt>Test dopasowania</dt>
+            <dd>Jeśli nie ma czego destylować, mówi to i kończy.</dd>
+            <dt>Zasady</dt>
+            <dd><ul class="steps">
+              <li>Uogólniaj zachowanie, nie tożsamość</li>
+              <li>Granica wyrasta tam, gdzie pojawiają się procesy specyficzne dla typu</li>
+              <li>Testuj skutkiem w kontekście, nie przyczyną</li>
+              <li>Uogólnienie żyje w jednym kontekście</li>
+              <li>Szukaj po czasownikach, nie po rzeczownikach</li>
+              <li>Model uogólniony nie zna szczegółów</li>
+            </ul></dd>
+            <dt>Kroki</dt>
+            <dd><ol class="steps">
+              <li>Rzeczowniki i czasowniki</li>
+              <li>Analiza dwukierunkowa: jedno słowo z kilkoma znaczeniami, kilka słów z jednym znaczeniem</li>
+              <li>Pytania o skutek</li>
+              <li>Mapa kontekstów: uogólnione i specyficzne</li>
+              <li>Skąd wzięła się każda decyzja</li>
+            </ol></dd>
+            <dt>Wynik</dt>
+            <dd>Mapa kontekstów, czego każdy z nich nie wie, i warunki, przy których uogólnienie trzeba otworzyć na nowo.</dd>
+          </dl>
+        </details>
+        <a class="gh-link" href="https://github.com/pilloPl/granice-spojnosci-skille/blob/main/context-distiller/SKILL.md" target="_blank" rel="noopener">SKILL.md ↗</a>
+      </article>
+
+      <article class="skill">
+        <header>
+          <span class="tag t-orange">jednostka spójności</span>
+          <h3>aggregate-designer</h3>
+          <p>Kreator jednostki spójności, czyli jednostki blokowania.</p>
+          <code class="call">/aggregate-designer &lt;lista komend&gt;</code>
+        </header>
+        <details>
+          <summary>Anatomia</summary>
+          <dl class="anatomy">
+            <dt>Wejście</dt>
+            <dd>Opis domeny albo lista komend. Najpierw sprawdza, czy to rywalizacja o zasób, a nie CRUD.</dd>
+            <dt>Fazy</dt>
+            <dd><ol class="steps">
+              <li>Wejście i test dopasowania</li>
+              <li>Komendy, oddzielone od faktów i zapytań</li>
+              <li>Konflikty parami: komenda sama ze sobą, zależne od parametrów, przechodnie</li>
+              <li>Czy proces biznesowy rozdziela parę w czasie</li>
+              <li>Obciążenie: ile, kiedy szczyty, czy instancje rywalizują</li>
+              <li>Minimum danych do decyzji dla każdej komendy</li>
+              <li>Co wchodzi do środka, a co zostaje za granicą</li>
+              <li>Blokowanie; decyzja w bazie czy w aplikacji</li>
+              <li>Model: diagram granicy i model szczegółowy</li>
+            </ol></dd>
+            <dt>Wynik</dt>
+            <dd>Diagram granicy, tabela komend i niezmienników, pola, świadome wykluczenia, blokowanie i otwarte decyzje.</dd>
+            <dt>Opcjonalnie</dt>
+            <dd>Mechanika blokowania, persystencja, strategia testów.</dd>
+          </dl>
+        </details>
+        <a class="gh-link" href="https://github.com/pilloPl/granice-spojnosci-skille/blob/main/aggregate-designer/SKILL.md" target="_blank" rel="noopener">SKILL.md ↗</a>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ ZADANIA ============ -->
+  <section id="zadania" class="panel" hidden>
+    <div class="panel-head">
+      <h2>Zadania</h2>
+    </div>
+
+    <!-- ZADANIE 1 -->
+    <article class="task" id="zadanie-1">
+      <div class="task-head">
+        <span class="num">1</span>
+        <h3>Reguły spójnościowe w programie „Razem”</h3>
+      </div>
+      <div class="task-body">
+        <div class="md clamp" data-md="content/zadanie-1.md"></div>
+        <figure class="mockup">
+          <button type="button" class="zoom" data-src="img/makieta-portfela.jpg" data-caption="Makieta: ekran portfela">
+            <img src="img/makieta-portfela.jpg" alt="Makieta ekranu portfela w aplikacji Razem" loading="lazy">
+          </button>
+        </figure>
+      </div>
+      <div class="task-actions">
+        <a class="btn primary" href="pdf/zadanie-1.pdf" download>Pobierz całą treść (PDF)</a>
+        <button class="btn" type="button" data-expand>Rozwiń treść</button>
+        <button class="btn solution-btn" type="button" data-solution="roz-1">Pokaż rozwiązanie</button>
+      </div>
+
+      <div class="solution" id="roz-1" hidden>
+        <h4>Rozwiązanie</h4>
+        <p class="legend"><span class="chip c-blue">komenda</span><span class="chip c-yellow">reguła</span><span class="chip c-orange">zdarzenie</span></p>
+
+        <ol class="walk">
+          <li>
+            <h5>Destylacja samych reguł spójnościowych</h5>
+            <ul>
+              <li><b>Walidacja odpada.</b> Numer członkowski z poprawną sumą kontrolną, nazwisko z co najmniej 2 znakami, data urodzenia w przeszłości, e-mail i telefon w poprawnym formacie. Wszystko sprawdzasz na danych z żądania.</li>
+              <li><b>Obliczenia odpadają.</b> Punkty policzone algorytmem naliczania to wyliczenie, a nie decyzja.</li>
+              <li><b>Procesy odpadają.</b> „Push tylko wtedy, gdy punkty trafiły do portfela” to kolejność w procesie. Od niej nie zależy, czy operacja się uda.</li>
+            </ul>
+            <button type="button" class="zoom-dg diagram" data-diagram="krok1" aria-label="Powiększ rysunek kroku 1"></button>
+          </li>
+
+          <li>
+            <h5>„Co wpływa na potencjalną zmianę reguły? Jakie zdarzenia?” Perspektywa statyczna</h5>
+            <p>Przy każdej regule szukasz zdarzeń, które zmieniają dane, na których ta reguła stoi. Strzałka przerywana prowadzi od zdarzenia do reguły.</p>
+            <ul>
+              <li><b>Strażnik portfeli firmowych</b>: otwórz i zamknij portfel firmowy; reguła „firma ma najwyżej 3 portfele jednocześnie”.</li>
+              <li><b>Portfel</b>: zrealizuj punkty, nalicz punkty za zakup, dodaj i zabierz prawo do portfela, aktywuj, dezaktywuj, otwórz nowe okno, zmień politykę naliczeń. Reguły: portfel aktywny, osoba z dostępem do portfela, punkty nie przekraczają salda, bieżące okno nie jest wyczerpane.</li>
+            </ul>
+            <button type="button" class="zoom-dg diagram" data-diagram="krok2" aria-label="Powiększ rysunek kroku 2"></button>
+          </li>
+
+          <li>
+            <h5>Perspektywa dynamiczna: „czy to ma szansę się konfliktować w naszym konkretnym środowisku?”</h5>
+            <p>Po każdej odpowiedzi biznesu granica się przesuwa.</p>
+            <ol class="substeps">
+              <li>
+                <h6>3.1 Zmiana polityki naliczeń wypada</h6>
+                <p>Szansa na konflikt jest minimalna, a konsekwencje znikome, więc zmiana polityki nie blokuje się z realizacją.</p>
+                <button type="button" class="zoom-dg diagram" data-diagram="krok3-1" aria-label="Powiększ rysunek 3.1"></button>
+              </li>
+              <li>
+                <h6>3.2 Dostęp w środku portfela</h6>
+                <p>Portfel pilnuje też listy osób z dostępem, więc nadanie i odebranie dostępu blokuje się z realizacją.</p>
+                <button type="button" class="zoom-dg diagram" data-diagram="krok3-2" aria-label="Powiększ rysunek 3.2"></button>
+              </li>
+              <li>
+                <h6>3.3 Portfel i Właścicielstwo osobno</h6>
+                <p>Dostęp przechodzi do osobnej jednostki. Przypadek użycia najpierw pyta Właścicielstwo, potem woła portfel.</p>
+                <button type="button" class="zoom-dg diagram" data-diagram="krok3-3" aria-label="Powiększ rysunek 3.3"></button>
+              </li>
+              <li>
+                <h6>3.4 Alternatywa: agregat procesowy</h6>
+                <p>Jeśli ten jeden przypadek użycia musi być szczelny, blokuje Właścicielstwo na czas wypłaty. Jednostki zostają osobno.</p>
+                <button type="button" class="zoom-dg diagram" data-diagram="krok3-4" aria-label="Powiększ rysunek 3.4"></button>
+              </li>
+            </ol>
+          </li>
+
+          <li>
+            <h5>Ewentualne uogólnienie</h5>
+            <p>Portfel, portfel firmowy i pakiet sprzedawcy mają takie same reguły, komendy i zdarzenia. Różne słowa biorą się z różnych procesów: realizacji, płatności w stołówce, przyznania punktów klientowi. To parafrazy „odprocesowe”. Możesz zrobić z nich jedną jednostkę spójności albo uznać, że dynamicznie zachowują się inaczej: portfel firmowy w porze obiadu to duży ruch.</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th></th><th>Portfel</th><th>Portfel firmowy</th><th>Pakiet</th></tr></thead>
+                <tbody>
+                  <tr><th>obciążenie</th><td>zrealizuj punkty</td><td>zapłać punktami w stołówce</td><td>przyznaj punkty klientowi</td></tr>
+                  <tr><th>zasilenie</th><td>nalicz punkty za zakup</td><td>zasil portfel firmowy</td><td>dokup pakiet</td></tr>
+                  <tr><th>kto może</th><td>dodaj / zabierz prawo do portfela</td><td>wpisz / wypisz pracownika z listy</td><td>zgłoś / dezaktywuj kasę</td></tr>
+                  <tr><th>status</th><td>aktywuj / dezaktywuj</td><td>aktywuj / dezaktywuj</td><td>pakiet nie jest zawieszony</td></tr>
+                  <tr><th>okno</th><td>otwórz nowe okno</td><td>otwórz nowe okno</td><td>odnów limit dzienny</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <button type="button" class="zoom shot" data-src="img/krok4.jpg" data-caption="Krok 4"><img src="img/krok4.jpg" alt="Portfel, portfel firmowy i pakiet obok siebie" loading="lazy"></button>
+          </li>
+        </ol>
+      </div>
+    </article>
+
+    <!-- ZADANIE 2 -->
+    <article class="task" id="zadanie-2">
+      <div class="task-head">
+        <span class="num">2</span>
+        <h3>Naucz model szukać reguł spójnościowych</h3>
+      </div>
+      <div class="task-body">
+        <div class="md clamp" data-md="content/zadanie-2.md"></div>
+      </div>
+      <div class="task-actions">
+        <a class="btn primary" href="pdf/zadanie-2.pdf" download>Pobierz całą treść (PDF)</a>
+        <button class="btn" type="button" data-expand>Rozwiń treść</button>
+        <button class="btn solution-btn" type="button" data-solution="roz-2">Pokaż rozwiązanie</button>
+      </div>
+
+      <div class="solution" id="roz-2" hidden>
+        <h4>Rozwiązanie: <code>problem-classifier</code></h4>
+
+        <div class="run">
+          <h5>Pytania skilla i odpowiedzi</h5>
+          <ul class="qa">
+            <li><b>Pakiet:</b> twarda blokada. Naliczenie ponad pulę odrzucamy.</li>
+            <li><b>Odbiorcy jednego zakupu:</b> niezależnie. Każdy portfel doładowujemy osobno, z gwarancją dostarczenia.</li>
+            <li><b>Limity w oknie:</b> twarde, sprawdzane razem z saldem.</li>
+            <li><b>Analityka:</b> może dostać realizację z opóźnieniem, byle nic nie zginęło (outbox).</li>
+          </ul>
+          <p><b>Wynik:</b> klasyfikacja złożona. Rdzeń to rywalizacja o zasób: realizacja, doładowanie, płatność w stołówce, sfinansowanie z pakietu. Obudowują go integracja (push, analityka, kadry, rozesłanie porcji) oraz transformacja i prezentacja (kalkulatory, historia, raporty). Dane właściciela i lista osób z dostępem to CRUD.</p>
+          <details class="full"><summary>Pełny przebieg</summary><div class="md" data-md="content/problem-classifier-przebieg.md" data-lazy></div></details>
+          <a class="gh-link" href="https://github.com/pilloPl/granice-spojnosci-skille/blob/main/problem-classifier/SKILL.md" target="_blank" rel="noopener">problem-classifier ↗</a>
+        </div>
+
+        <div class="run optional">
+          <h5><span class="chip c-yellow">Opcjonalnie</span> <code>context-distiller</code>: czy to jest to samo?</h5>
+          <p>Sonda jednego pojęcia: portfel uczestnika, portfel firmowy i pakiet sprzedawcy. Wszystkie cztery odpowiedzi potwierdziły uogólnienie. W kontekście obciążeń i zasileń to jedno <b>Konto punktowe</b>. Realizacja, płatność w stołówce i sfinansowanie to <b>Obciążenie</b>. Doładowanie, zasilenie i dokupienie to <b>Zasilenie</b>. Poza tym kontekstem pojęcia się rozchodzą: członkostwo i aktywność, Razem Biznes, umowy ze sprzedawcami.</p>
+          <details class="full"><summary>Pełny przebieg</summary><div class="md" data-md="content/context-distiller-przebieg.md" data-lazy></div></details>
+          <a class="gh-link" href="https://github.com/pilloPl/granice-spojnosci-skille/blob/main/context-distiller/SKILL.md" target="_blank" rel="noopener">context-distiller ↗</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- ZADANIE 3 -->
+    <article class="task" id="zadanie-3">
+      <div class="task-head">
+        <span class="num">3</span>
+        <h3>Model w kodzie</h3>
+      </div>
+      <div class="task-body">
+        <div class="md clamp" data-md="content/zadanie-3.md"></div>
+      </div>
+      <div class="task-actions">
+        <a class="btn primary" href="pdf/zadanie-3.pdf" download>Pobierz całą treść (PDF)</a>
+        <button class="btn" type="button" data-expand>Rozwiń treść</button>
+        <button class="btn solution-btn" type="button" data-solution="roz-3">Pokaż rozwiązanie</button>
+      </div>
+
+      <div class="solution" id="roz-3" hidden>
+        <h4>Rozwiązanie: wciągaj jak najmniej danych</h4>
+        <p>Do portfela trafia tylko to, czego potrzebuje któraś decyzja. Bierzemy <b>wariant B, portfel bez dostępu</b>: odebranie prawa w trakcie płatności to nie problem, więc lista osób z dostępem żyje obok, a przypadek użycia sprawdza ją przed wywołaniem portfela. <code>LoyaltyWallet</code> ma flagę aktywności, saldo punktów i okno z limitem i zakresem od–do.</p>
+
+<pre class="code"><code><span class="kw">class</span> LoyaltyWallet {
+    WalletId        id
+    <span class="kw">boolean</span>         aktywny
+    Punkty          saldo
+    OknoRealizacji  okno            <span class="cm">// od, do, limit, wykorzystane</span>
+
+    zrealizuj(Punkty s) {         <span class="cm">// s przeliczone polityką przed wejściem do portfela</span>
+        wymagaj(aktywny,          <span class="st">"portfel nieaktywny"</span>)
+        wymagaj(okno.maMiejsce(), <span class="st">"okno wyczerpane"</span>)
+        wymagaj(saldo &gt;= s,       <span class="st">"za mało punktów"</span>)
+        saldo = saldo - s
+        okno  = okno.zapiszRealizację()
+        <span class="kw">return</span> PunktyZrealizowane(id, s, saldo)
+    }
+
+    doładuj(Punkty p) {
+        wymagaj(aktywny, <span class="st">"portfel nieaktywny"</span>)
+        saldo = saldo + p
+        <span class="kw">return</span> PortfelDoładowany(id, p, saldo)
+    }
+
+    otwórzNoweOkno(Czas od, Czas do, <span class="kw">int</span> limit) {  <span class="cm">// woła scheduler</span>
+        <span class="kw">if</span> (od &lt; okno.do) <span class="kw">return</span> nic                <span class="cm">// tylko do przodu, idempotentnie</span>
+        okno = <span class="kw">new</span> OknoRealizacji(od, do, limit, wykorzystane: 0)
+        <span class="kw">return</span> NoweOknoOtwarte(id, od, do, limit)
+    }
+
+    dezaktywuj() { aktywny = <span class="kw">false</span>; <span class="kw">return</span> PortfelZdezaktywowany(id) }
+    aktywuj()    { aktywny = <span class="kw">true</span>;  <span class="kw">return</span> PortfelAktywowany(id) }
+}
+
+<span class="kw">value</span> OknoRealizacji(Czas od, Czas do, <span class="kw">int</span> limit, <span class="kw">int</span> wykorzystane) {
+    maMiejsce()        = wykorzystane &lt; limit
+    zapiszRealizację() = OknoRealizacji(od, do, limit, wykorzystane + 1)
+}</code></pre>
+
+        <div class="cols">
+          <div>
+            <h5>Poza portfelem</h5>
+            <ul>
+              <li><b>Historia realizacji i okien</b> to widok. Do decyzji wystarczy licznik bieżącego okna.</li>
+              <li><b>Polityka korzyści</b> liczy <i>s</i> z <i>r</i> przed wywołaniem portfela. Operator zmienia ją raz, w nocy.</li>
+              <li><b>Osoby z dostępem</b> są w osobnej jednostce (wariant B).</li>
+              <li><b>Dane właściciela</b> to CRUD z walidacją.</li>
+              <li><b>Push i analityka</b> dostają zdarzenia z outboxa po commicie.</li>
+            </ul>
+          </div>
+          <div>
+            <h5>Wersja decider</h5>
+            <p>W repozytoriach szkoleniowych stan to typ sumy (<code>NotExisting</code>, <code>Active</code>, <code>Deactivated</code>, <code>Closed</code>). <code>decide(komenda, stan)</code> zwraca zdarzenia, a <code>evolve</code> nakłada je na stan. Dostęp jest tam w środku portfela, czyli to wariant A.</p>
+            <ul class="repo-links">
+              <li><a href="https://github.com/pilloPl/consistency-class-java/blob/master/src/main/java/com/razem/loyalty/loyaltyWallet/LoyaltyWalletDecider.java" target="_blank" rel="noopener"><span class="lang">Java</span> LoyaltyWalletDecider ↗</a></li>
+              <li><a href="https://github.com/oskardudycz/consistency-class-csharp/blob/main/ConsistencyClass/LoyaltyWallets/LoyaltyWallet.cs" target="_blank" rel="noopener"><span class="lang">C#</span> LoyaltyWalletDecider ↗</a></li>
+              <li><a href="https://github.com/oskardudycz/consistency-class-ts/blob/main/src/loyaltyWallet/loyaltyWallet.ts" target="_blank" rel="noopener"><span class="lang">TS</span> decide / evolve ↗</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="run">
+          <h5><code>aggregate-designer</code> na diagramie Portfela</h5>
+
+          <h6>Faza 1: czy tu jest współbieżność?</h6>
+          <p>Tak. Dwie równoległe realizacje mogą obie sprawdzić, że punkty nie przekraczają salda, a okno nie jest wyczerpane, i obie przejść. Saldo albo limit spada wtedy poniżej zera.</p>
+
+          <h6>Faza 2: komendy</h6>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Komenda</th><th>Co zmienia</th><th>Reguły z diagramu</th></tr></thead>
+              <tbody>
+                <tr><td>Zrealizuj punkty</td><td>zmniejsza saldo, zużywa limit okna</td><td>portfel aktywny · punkty ≤ saldo · okno niewyczerpane</td></tr>
+                <tr><td>Doładuj</td><td>zwiększa saldo</td><td>portfel aktywny</td></tr>
+                <tr><td>Dezaktywuj portfel</td><td>status → nieaktywny</td><td>brak</td></tr>
+                <tr><td>Aktywuj portfel</td><td>status → aktywny</td><td>brak</td></tr>
+                <tr><td>Otwórz nowe okno</td><td>zeruje wykorzystanie limitu</td><td>brak</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h6>Faza 3: konflikty parami na jednym portfelu</h6>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>A</th><th>B</th><th>Konflikt?</th><th>Dlaczego</th></tr></thead>
+              <tbody>
+                <tr><td>Zrealizuj</td><td>Zrealizuj</td><td><b>TAK</b></td><td>obie widzą to samo saldo i ten sam limit, a razem je przekraczają</td></tr>
+                <tr><td>Zrealizuj</td><td>Dezaktywuj</td><td><b>TAK</b></td><td>realizacja nie widzi trwającej dezaktywacji</td></tr>
+                <tr><td>Zrealizuj</td><td>Otwórz okno</td><td><b>TAK</b></td><td>zużycie trafia do wyzerowanego okna albo ginie</td></tr>
+                <tr><td>Doładuj</td><td>Dezaktywuj</td><td><b>TAK</b></td><td>doładowanie nie widzi trwającej dezaktywacji</td></tr>
+                <tr><td>Zrealizuj</td><td>Doładuj</td><td>NIE*</td><td>reguła się trzyma; aktualizacja może zginąć, jeśli saldo to jedno pole</td></tr>
+                <tr><td>Dezaktywuj</td><td>Aktywuj</td><td>NIE</td><td>wygrywa ostatni zapis</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Przechodniość: realizacja, doładowanie, dezaktywacja i otwarcie okna tworzą jedną jednostkę. Aktywacja dołącza, bo zapisuje to samo pole statusu.</p>
+
+          <h6>Pytania skilla i odpowiedzi</h6>
+          <ul class="qa">
+            <li><b>Czy „Otwórz nowe okno” to komenda, czy upływ czasu? Czym jest okno?</b> Okno otwiera scheduler. Okno to limit realizacji w danym okresie.</li>
+            <li><b>Czy Aktywuj i Dezaktywuj mają jakieś reguły?</b> Nie muszą mieć.</li>
+            <li><b>Czy analiza konfliktów jest poprawna?</b> Wygląda poprawnie.</li>
+            <li><b>Czy proces biznesowy rozdziela Zrealizuj i Dezaktywuj?</b> Nie. Mogą zajść jednocześnie i to jest problem.</li>
+            <li><b>Czy proces biznesowy rozdziela Doładuj i Dezaktywuj?</b> Nie. Mogą zajść jednocześnie i to jest problem.</li>
+            <li><b>Czy proces biznesowy rozdziela Zrealizuj i Otwórz nowe okno?</b> Nie, mogą zajść jednocześnie.</li>
+            <li><b>Ile komend trafia w jeden portfel w szczycie?</b> Dużo: setki na sekundę albo nieprzewidywalne skoki.</li>
+            <li><b>Czy szczyty różnych komend się nakładają?</b> Nie, wypadają w różnych porach.</li>
+            <li><b>Czy każda komenda dotyczy jednego portfela?</b> Nie zawsze: dezaktywacja i aktywacja bywają masowe.</li>
+            <li><b>Masowa (de)aktywacja: jedna transakcja na wszystkie portfele czy osobna komenda na każdy?</b> Osobna komenda na każdy portfel, ze spójnością ostateczną między portfelami.</li>
+            <li><b>Czy portfel może przez chwilę działać w starym oknie, zanim dotrze do niego scheduler?</b> Nie może.</li>
+          </ul>
+
+          <h6>Faza 6: minimum danych do decyzji</h6>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Komenda</th><th>Dane do decyzji</th><th>Po co</th></tr></thead>
+              <tbody>
+                <tr><td>Zrealizuj punkty</td><td>status, saldo, bieżące okno, limit okna, wykorzystanie w oknie</td><td>trzy reguły</td></tr>
+                <tr><td>Doładuj</td><td>status</td><td>portfel aktywny; saldo tylko rośnie</td></tr>
+                <tr><td>Dezaktywuj / Aktywuj</td><td>status</td><td>idempotencja</td></tr>
+                <tr><td>Otwórz nowe okno</td><td>bieżące okno</td><td>idempotencja przy podwójnym odpaleniu schedulera</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>W środku nie ma żadnej kolekcji, wystarczą liczby. Historia realizacji i doładowań idzie do read modelu ze zdarzeń. Konfigurację limitu scheduler kopiuje do portfela przy otwarciu okna.</p>
+          <a class="gh-link" href="https://github.com/pilloPl/granice-spojnosci-skille/blob/main/aggregate-designer/SKILL.md" target="_blank" rel="noopener">aggregate-designer ↗</a>
+        </div>
+      </div>
+    </article>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <span>Granice spójności i współbieżności</span>
+  <span class="foot-links">
+    <a href="https://github.com/pilloPl/consistency-class-java" target="_blank" rel="noopener">Java ↗</a>
+    <a href="https://github.com/oskardudycz/consistency-class-csharp" target="_blank" rel="noopener">C# ↗</a>
+    <a href="https://github.com/oskardudycz/consistency-class-ts" target="_blank" rel="noopener">TS ↗</a>
+    <a href="https://github.com/pilloPl/granice-spojnosci-skille" target="_blank" rel="noopener">Skille ↗</a>
+  </span>
+</footer>
+
+<dialog id="lightbox">
+  <button type="button" class="lb-close" aria-label="Zamknij">×</button>
+  <div class="lb-body"></div>
+  <p class="lb-cap"></p>
+</dialog>
+
+<script type="text/template" id="mindmap-md">
+# wymagania
+## reguły walidacyjne
+### sprawdzenie nie zależy od stanu, który podczas sprawdzania może się zmienić (albo szansa na to jest nikła)
+#### CRUD-y
+## reguły spójnościowe
+### jest walka o zasoby: sprawdzenie zależy OD STANU, który może się podczas sprawdzania zmienić
+#### jednostki spójności, czyli agregaty
+##### technika destylacji: CO WPŁYWA na daną regułę? Jakie zdarzenia biznesowe?
+###### 1) tak dostajesz ujęcie statyczne
+###### 2) nałóż na nie ujęcie dynamiczne: jaka jest w ogóle szansa na problem współbieżności w naszym konkretnym środowisku?
+###### 3) pytaniami analitycznymi znajdź balans między spójnością a skalowalnością
+- większa jednostka spójności: więcej spójności, mniej skalowalności
+- mniejsza jednostka spójności: więcej skalowalności, mniej spójności
+- pamiętaj o technice „agregatu procesowego”: na jeden konkretny przypadek użycia możesz zablokować 2 jednostki spójności
+###### 4) perspektywa kodu
+- wydajność: im bliżej bazy, tym wydajniej (ale mniej testowalności i elastyczności)
+- czy wczytujesz najmniejszy zestaw danych do podjęcia decyzji?
+- blokowanie optymistyczne czy pesymistyczne?
+- ograniczenia dostępnej technologii
+##### pułapka: przez myślenie rzeczownikowe każdy przypadek użycia może się do „rzeczownika przykleić”
+## reguły procesowe
+### reguła kolejności: „po X MUSIMY zrobić Y”
+#### zapewniasz kolejność w procesie
+- coś się wyśle gdzieś dalej, zsynchronizujemy się z innym systemem
+- albo coś się transakcyjnie zmieni w 2 krokach, ale uwaga: wtedy zwiększamy sekcję krytyczną
+- serwisy aplikacyjne, orkiestratory, przypadki użycia
+## reguły prezentacyjne
+### coś się musi jakoś zaprezentować
+#### read modele
+## uogólnienie
+### zwróć uwagę, czy nie masz do czynienia z parafrazami, które wynikają z różnych procesów (a pod spodem jest jedna, ta sama struktura)
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.18/dist/browser/index.iife.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18/dist/browser/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@14/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16/dist/contrib/auto-render.min.js"></script>
+<script src="diagrams.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
